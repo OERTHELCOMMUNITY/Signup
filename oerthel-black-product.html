@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OERTHEL BLACK — Espresso in a Can</title>
+<meta name="description" content="OERTHEL BLACK. Pure espresso in a can, zero sugar. Available in packs of 1, 6, 12 or 24.">
+<meta name="view-transition" content="same-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #080808;
+  --dark: #161616;
+  --card-bg: #111111;
+  --white: #f5f5f0;
+  --off-white: #d8d8d2;
+  --muted: #888880;
+  --gold: #b8965a;
+  --gold-light: #d4aa6a;
+  --font-display: 'Manrope', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { font-size: 16px; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-display);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 24px 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.9) 0%, transparent 100%);
+  transition: all 0.4s var(--ease);
+}
+
+nav.scrolled {
+  background: rgba(8,8,8,0.95);
+  backdrop-filter: blur(20px);
+  padding: 16px 48px;
+  border-bottom: 1px solid rgba(184,150,90,0.15);
+}
+
+.nav-logo {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.nav-back {
+  position: absolute;
+  left: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--off-white);
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+}
+
+.nav-back svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-back:hover {
+  color: var(--gold-light);
+}
+
+@media (max-width: 480px) {
+  .nav-back { left: 20px; font-size: 0; gap: 0; }
+  .nav-back svg { width: 16px; height: 16px; }
+}
+
+/* ===== PRODUCT LAYOUT ===== */
+.product-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 160px 48px 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.product-visual {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--dark);
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s var(--ease-out) 0.2s forwards;
+  view-transition-name: visual-black;
+}
+
+.product-visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.product-visual img.active {
+  opacity: 1;
+}
+
+.product-info {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s var(--ease-out) 0.4s forwards;
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.product-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.product-title {
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.product-desc {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--off-white);
+  line-height: 1.7;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+
+.qty-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.qty-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 32px;
+  max-width: 400px;
+}
+
+.qty-option {
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--off-white);
+  font-family: var(--font-display);
+  padding: 16px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  position: relative;
+}
+
+.qty-badge {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 3px 6px;
+  line-height: 1;
+}
+
+.qty-option.selected .qty-badge {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.qty-option .qty-num {
+  display: block;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.qty-option .qty-unit {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.qty-option:hover {
+  border-color: rgba(184,150,90,0.4);
+}
+
+.qty-option.selected {
+  background: var(--white);
+  border-color: var(--white);
+}
+
+.qty-option.selected .qty-num,
+.qty-option.selected .qty-unit {
+  color: var(--black);
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.savings {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 32px;
+}
+
+.price {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.price-per-can {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.waitlist-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.email-input {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 14px;
+  padding: 0 18px;
+  height: 54px;
+  outline: none;
+  transition: border-color 0.25s var(--ease);
+}
+
+.email-input::placeholder {
+  color: var(--muted);
+}
+
+.email-input:focus {
+  border-color: var(--gold);
+}
+
+.form-message {
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  display: none;
+}
+
+.form-message.error {
+  color: #d97a6a;
+  display: block;
+}
+
+/* ===== SUCCESS BANNER (groene balk bovenaan) ===== */
+#successBanner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9998;
+  background: #1a5c35;
+  border-bottom: 2px solid #27ae60;
+  padding: 0 48px;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s var(--ease-out), opacity 0.5s var(--ease-out);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#successBanner.show {
+  height: 68px;
+  opacity: 1;
+}
+
+.success-banner-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: #27ae60;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-banner-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: #fff;
+  stroke-width: 2.5;
+}
+
+.success-banner-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.4;
+}
+
+.success-banner-text strong {
+  font-weight: 800;
+  color: #7fffb2;
+}
+
+.success-banner-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+
+.success-banner-close:hover { color: #fff; }
+
+@media (max-width: 768px) {
+  #successBanner { padding: 0 20px; }
+  #successBanner.show { height: 80px; }
+  .success-banner-text { font-size: 13px; }
+}
+
+/* ===== SUCCESS STATE (inline, na formulier) ===== */
+.success-state {
+  display: none;
+  text-align: left;
+  animation: fadeIn 0.6s var(--ease-out);
+}
+
+.success-state.show { display: block; }
+
+.success-icon {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #27ae60;
+  border-radius: 50%;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.5s var(--ease-out);
+  background: rgba(39,174,96,0.08);
+}
+
+.success-icon svg { width: 26px; height: 26px; stroke: #27ae60; }
+
+.success-state h3 {
+  font-size: clamp(22px, 3vw, 28px);
+  margin-bottom: 14px;
+  color: var(--white);
+}
+
+.success-state p { font-size: 15px; color: var(--off-white); line-height: 1.7; max-width: 420px; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 18px 48px;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform: translateX(-100%);
+  transition: transform 0.4s var(--ease);
+}
+
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary span { position: relative; z-index: 1; }
+
+@media (max-width: 800px) {
+  .product-page {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 120px 24px 80px;
+  }
+  .qty-selector { max-width: 100%; }
+}
+
+::view-transition-group(visual-black) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ===== ABOUT SECTION ===== */
+.about-section {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 48px 160px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s var(--ease-out) 0.6s forwards;
+}
+
+.about-divider {
+  width: 40px;
+  height: 1px;
+  background: rgba(184,150,90,0.4);
+  margin: 0 auto 40px;
+}
+
+.about-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.about-text {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--off-white);
+  line-height: 1.85;
+}
+
+.about-text strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.ingredients-panel {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: left;
+}
+
+.ingredients-title {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.ingredients-body {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--off-white);
+}
+
+.ingredients-body b {
+  color: var(--white);
+  font-weight: 700;
+}
+
+.nutrition-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 6px 0;
+  border-bottom: 1px dotted rgba(255,255,255,0.1);
+}
+
+.nutrition-row:last-child { border-bottom: none; }
+
+.nutrition-row span:last-child {
+  color: var(--off-white);
+}
+
+.nutrition-row.sub-row span:first-child {
+  padding-left: 16px;
+  opacity: 0.7;
+}
+
+.nutrition-table {
+  margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .about-section { padding: 0 24px 100px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SUCCESS BANNER -->
+<div id="successBanner" role="alert" aria-live="polite">
+  <div class="success-banner-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  </div>
+  <div class="success-banner-text">
+    <strong>Spot claimed!</strong> You'll receive a confirmation email as soon as OERTHEL is available. Welcome to the first ones.
+  </div>
+  <button class="success-banner-close" id="closeBanner" aria-label="Close notification">&times;</button>
+</div>
+
+<nav id="mainNav">
+  <a href="oerthel-bio.html" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    <span>Back</span>
+  </a>
+  <div class="nav-logo">OERTHEL</div>
+</nav>
+
+<div class="product-page">
+
+  <div class="product-visual">
+    <img src="oerthelblack.jpg" alt="OERTHEL BLACK — 1 can" class="active" data-qty="1">
+    <img src="black-6.jpg" alt="OERTHEL BLACK — 6 cans" data-qty="6">
+    <img src="black-12.jpg" alt="OERTHEL BLACK — 12 cans" data-qty="12">
+    <img src="black-24.jpg" alt="OERTHEL BLACK — 24 cans" data-qty="24">
+  </div>
+
+  <div class="product-info">
+    <div class="product-label">System 01 — Pure Espresso</div>
+    <h1 class="product-title">OERTHEL BLACK</h1>
+    <p class="product-desc">250ml of 18 hour cold brewed Indonesian Arabica coffee beans. Pure espresso with 200mg caffeine, nothing else.</p>
+
+    <div class="qty-label">Choose your pack</div>
+    <div class="qty-selector" id="qtySelector">
+      <div class="qty-option selected" data-qty="1" data-price="2.25" data-discount="0">
+        <span class="qty-num">1</span>
+        <span class="qty-unit">Can</span>
+      </div>
+      <div class="qty-option" data-qty="6" data-price="12.15" data-discount="10">
+        <span class="qty-badge">-10%</span>
+        <span class="qty-num">6</span>
+        <span class="qty-unit">Cans</span>
+      </div>
+      <div class="qty-option" data-qty="12" data-price="22.95" data-discount="15">
+        <span class="qty-badge">-15%</span>
+        <span class="qty-num">12</span>
+        <span class="qty-unit">Cans</span>
+      </div>
+      <div class="qty-option" data-qty="24" data-price="43.20" data-discount="20">
+        <span class="qty-badge">-20%</span>
+        <span class="qty-num">24</span>
+        <span class="qty-unit">Cans</span>
+      </div>
+    </div>
+
+    <div class="price-row">
+      <div class="price" id="priceDisplay">€2.25</div>
+      <div class="price-per-can" id="pricePerCan">€2.25 / can</div>
+    </div>
+    <div class="savings" id="savingsDisplay" style="display:none;"></div>
+
+    <div id="formWrap">
+      <form class="waitlist-form" id="waitlistForm" action="https://formspree.io/f/mrewnggb" method="POST">
+        <input type="email" class="email-input" name="email" placeholder="Your email address" required>
+        <input type="hidden" name="pack" id="packField" value="1 Can">
+        <button type="submit" class="btn-primary" id="orderBtn"><span>Sign up for the waitlist</span></button>
+      </form>
+      <div class="form-message" id="formMessage"></div>
+    </div>
+
+    <div class="success-state" id="successState">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h3>Spot claimed. Welcome to the first ones.</h3>
+      <p>You'll hear from us as soon as OERTHEL is available. Until then: stop with energy drinks.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="about-section">
+  <div class="about-divider"></div>
+  <div class="about-label">About BLACK</div>
+  <p class="about-text">Espresso, reduced to what it actually is. <strong>100% Indonesian Arabica</strong>, cold brewed for 18 hours, poured straight into the can. No sugar. No sweeteners. No fillers. Just beans, water and time — <strong>200mg of clean caffeine</strong>, nothing to hide behind. Less ingredients. More focus.</p>
+
+  <div class="ingredients-panel">
+    <div class="ingredients-title">Ingredients</div>
+    <div class="ingredients-body">Water, <b>Coffee Extract 14%</b> (Coffea Arabica, Indonesia), Naturally Occurring Caffeine.</div>
+
+    <div class="nutrition-table">
+      <div class="nutrition-row"><span>Per 250ml can</span><span></span></div>
+      <div class="nutrition-row"><span>Energy</span><span>4 kcal</span></div>
+      <div class="nutrition-row"><span>Fat</span><span>0 g</span></div>
+      <div class="nutrition-row sub-row"><span>of which saturated</span><span>0 g</span></div>
+      <div class="nutrition-row"><span>Carbohydrates</span><span>0 g</span></div>
+      <div class="nutrition-row sub-row"><span>of which sugars</span><span>0 g</span></div>
+      <div class="nutrition-row"><span>Protein</span><span>0.3 g</span></div>
+      <div class="nutrition-row"><span>Salt</span><span>0.02 g</span></div>
+      <div class="nutrition-row"><span>Caffeine</span><span>200 mg</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+const qtyOptions = document.querySelectorAll('.qty-option');
+const images = document.querySelectorAll('.product-visual img');
+const priceDisplay = document.getElementById('priceDisplay');
+const pricePerCan = document.getElementById('pricePerCan');
+const savingsDisplay = document.getElementById('savingsDisplay');
+const basePrice = 2.25;
+
+qtyOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    qtyOptions.forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+
+    const qty = parseFloat(option.getAttribute('data-qty'));
+    const price = parseFloat(option.getAttribute('data-price'));
+    const discount = parseFloat(option.getAttribute('data-discount'));
+
+    images.forEach(img => {
+      img.classList.toggle('active', img.getAttribute('data-qty') === option.getAttribute('data-qty'));
+    });
+
+    priceDisplay.textContent = '€' + price.toFixed(2);
+    pricePerCan.textContent = '€' + (price / qty).toFixed(2) + ' / can';
+
+    if (discount > 0) {
+      const fullPrice = basePrice * qty;
+      const saved = fullPrice - price;
+      savingsDisplay.textContent = `Save ${discount}% — €${saved.toFixed(2)} off`;
+      savingsDisplay.style.display = 'block';
+    } else {
+      savingsDisplay.style.display = 'none';
+    }
+
+    const unit = qty === 1 ? 'Can' : 'Cans';
+    packField.value = `${qty} ${unit} (€${price.toFixed(2)})`;
+  });
+});
+
+const waitlistForm = document.getElementById('waitlistForm');
+const formMessage = document.getElementById('formMessage');
+const packField = document.getElementById('packField');
+const formWrap = document.getElementById('formWrap');
+const successState = document.getElementById('successState');
+const successBanner = document.getElementById('successBanner');
+const closeBanner = document.getElementById('closeBanner');
+
+closeBanner.addEventListener('click', () => {
+  successBanner.classList.remove('show');
+});
+
+waitlistForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Altijd de daadwerkelijk geselecteerde pack opnieuw uitlezen vlak voor verzenden
+  const selectedOption = document.querySelector('.qty-option.selected');
+  if (selectedOption) {
+    const selQty = selectedOption.getAttribute('data-qty');
+    const selPrice = parseFloat(selectedOption.getAttribute('data-price'));
+    const selUnit = selQty === '1' ? 'Can' : 'Cans';
+    packField.value = `${selQty} ${selUnit} (€${selPrice.toFixed(2)})`;
+  }
+
+  const submitBtn = waitlistForm.querySelector('button[type="submit"]');
+  const originalLabel = submitBtn.querySelector('span').textContent;
+  submitBtn.querySelector('span').textContent = 'Submitting…';
+  submitBtn.disabled = true;
+  formMessage.className = 'form-message';
+  formMessage.textContent = '';
+
+  try {
+    const response = await fetch(waitlistForm.action, {
+      method: 'POST',
+      body: new FormData(waitlistForm),
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      waitlistForm.reset();
+      packField.value = document.querySelector('.qty-option.selected .qty-num').textContent + ' ' +
+        document.querySelector('.qty-option.selected .qty-unit').textContent;
+
+      // Toon inline succes
+      formWrap.style.opacity = '0';
+      formWrap.style.transform = 'translateY(-20px)';
+      formWrap.style.transition = 'all 0.4s ease';
+
+      setTimeout(() => {
+        formWrap.style.display = 'none';
+        successState.classList.add('show');
+      }, 400);
+
+      // Toon groene balk bovenaan
+      successBanner.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => successBanner.classList.remove('show'), 8000);
+    } else {
+      const data = await response.json().catch(() => null);
+      const errorText = data && data.errors ? data.errors.map(err => err.message).join(', ') : 'Something went wrong. Please try again.';
+      formMessage.textContent = errorText;
+      formMessage.className = 'form-message error';
+      submitBtn.querySelector('span').textContent = originalLabel;
+      submitBtn.disabled = false;
+    }
+  } catch (err) {
+    formMessage.textContent = 'Something went wrong. Please try again.';
+    formMessage.className = 'form-message error';
+    submitBtn.querySelector('span').textContent = originalLabel;
+    submitBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
